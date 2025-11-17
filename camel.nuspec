@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>camel-tui</id>
+    <version>0.1.0</version>
+    <title>Camel TUI</title>
+    <authors>ConsciousnessDebtor</authors>
+    <projectUrl>https://github.com/quivent/camel</projectUrl>
+    <licenseUrl>https://github.com/quivent/camel/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Advanced agentic TUI with 42 breakthrough features. AI-powered terminal interface for Ollama models.</description>
+    <summary>AI-powered terminal interface with tool execution</summary>
+    <tags>ai tui terminal ollama llm agent python</tags>
+    <dependencies>
+      <dependency id="python3" version="3.10" />
+      <dependency id="git" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
