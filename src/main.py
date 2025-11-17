@@ -79,6 +79,7 @@ class CamelTUI(App):
     """
 
     BINDINGS = [
+        Binding("escape", "quit", "Quit", priority=True),
         Binding("ctrl+q", "quit", "Quit"),
         Binding("ctrl+t", "toggle_terminal", "Terminal"),
         Binding("ctrl+e", "focus_input", "Input"),
