@@ -151,7 +151,7 @@ class CamelTUI(App):
             with open(servers_file) as f:
                 config = yaml.safe_load(f)
                 return config.get("servers", [])
-        return [{"name": "Default", "endpoint": "http://192.222.57.162:11434", "default": True}]
+        return [{"name": "Default", "endpoint": "http://localhost:11434", "default": True}]
 
     def load_startup_prompt(self) -> str:
         """Load startup prompt"""

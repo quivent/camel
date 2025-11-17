@@ -16,7 +16,7 @@ from datetime import datetime, UTC
 from typing import List, Dict, Optional
 
 
-OLLAMA_ENDPOINT = "http://192.222.57.162:11434"
+OLLAMA_ENDPOINT = "http://localhost:11434"
 MODEL = "gpt-oss:120b"
 
 
