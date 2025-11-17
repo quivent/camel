@@ -151,7 +151,7 @@ class CamelTUI(App):
             with open(servers_file) as f:
                 config = yaml.safe_load(f)
                 return config.get("servers", [])
-        return [{"name": "Default", "endpoint": "http://localhost:11434", "default": True}]
+        return [{"name": "Default", "endpoint": "http://192.222.57.162:11434", "default": True}]
 
     def load_startup_prompt(self) -> str:
         """Load startup prompt"""
@@ -199,33 +199,40 @@ class CamelTUI(App):
             self.available_models = [{"name": self.current_model, "size": "120B"}]
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
-        """Handle user input"""
+        """Handle user input - non-blocking"""
         user_input = event.value
         if not user_input.strip():
             return
 
-        # Clear input
+        # Clear input immediately so user can type again
         self.query_one("#chat-input").value = ""
 
         # Add to display
         self.add_message(f"You: {user_input}", "prompt")
 
-        # Process with agent
+        # Process with agent in background (non-blocking)
         self.update_status("Thinking...")
-        response = await self.agent.query(user_input, self.conversation_history)
+        asyncio.create_task(self._process_query(user_input))
 
-        if response:
-            self.add_message(f"Camel: {response}", "response")
-            self.last_response = response  # Store for copying
-            self.all_messages.append(f"You: {user_input}\n\nCamel: {response}")
-            self.conversation_history.append({
-                "user": user_input,
-                "assistant": response
-            })
-        else:
-            self.add_message("Error: No response from agent", "error")
+    async def _process_query(self, user_input: str) -> None:
+        """Process query in background - allows typing during execution"""
+        try:
+            response = await self.agent.query(user_input, self.conversation_history)
 
-        self.update_status("Ready")
+            if response:
+                self.add_message(f"Camel: {response}", "response")
+                self.last_response = response  # Store for copying
+                self.all_messages.append(f"You: {user_input}\n\nCamel: {response}")
+                self.conversation_history.append({
+                    "user": user_input,
+                    "assistant": response
+                })
+            else:
+                self.add_message("Error: No response from agent", "error")
+        except Exception as e:
+            self.add_message(f"Error: {str(e)}", "error")
+        finally:
+            self.update_status("Ready")
 
     def add_message(self, text: str, style: str = "response") -> None:
         """Add message to chat display"""
