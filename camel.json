@@ -1,0 +1,23 @@
+{
+    "version": "0.1.0",
+    "description": "Advanced agentic TUI with 42 breakthrough features",
+    "homepage": "https://github.com/quivent/camel",
+    "license": "MIT",
+    "depends": ["python", "git"],
+    "url": "https://github.com/quivent/camel/archive/refs/tags/v0.1.0.zip",
+    "hash": "auto",
+    "extract_dir": "camel-0.1.0",
+    "installer": {
+        "script": [
+            "pip install -r \"$dir\\requirements.txt\" --quiet",
+            "New-Item -ItemType Directory -Force -Path \"$dir\\bin\" | Out-Null"
+        ]
+    },
+    "bin": [
+        ["python.exe", "camel", "src/main.py"]
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "url": "https://github.com/quivent/camel/archive/refs/tags/v$version.zip"
+    }
+}
