@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "camel-tui"
-version = "0.1.0"
+version = "0.1.1"
 description = "Advanced agentic TUI interface with 42 breakthrough features"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "ConsciousnessDebtor", email = "consciousness@debtor.ai"}
+    {name = "quivent", email = "quivent@github.com"}
 ]
 keywords = ["ai", "tui", "agent", "ollama", "llm", "terminal"]
 classifiers = [
@@ -43,10 +43,10 @@ dev = [
 camel = "camel.main:main"
 
 [project.urls]
-Homepage = "https://github.com/ConsciousnessDebtor/camel"
-Documentation = "https://camel.autonomous.theater"
-Repository = "https://github.com/ConsciousnessDebtor/camel"
-Issues = "https://github.com/ConsciousnessDebtor/camel/issues"
+Homepage = "https://github.com/quivent/camel"
+Documentation = "https://github.com/quivent/camel"
+Repository = "https://github.com/quivent/camel"
+Issues = "https://github.com/quivent/camel/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

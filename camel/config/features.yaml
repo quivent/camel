@@ -1,0 +1,166 @@
+# Camel Feature Manifest
+# Auto-generated - tracks all 42 breakthrough features
+
+version: "1.0"
+total_features: 42
+
+critical:
+  - name: model_switching
+    description: Dynamic model switching between Ollama models
+    status: in_development
+    keybinding: Ctrl+M
+
+  - name: server_switching
+    description: Switch between multiple Ollama servers
+    status: in_development
+    keybinding: Ctrl+S
+
+  - name: tools_menu
+    description: Interactive menu showing available tools
+    status: in_development
+    keybinding: Ctrl+/
+
+  - name: conversation_window
+    description: Scrollable conversation history with timestamps
+    status: in_development
+    keybinding: null
+
+  - name: startup_prompt
+    description: Configurable startup initialization prompt
+    status: in_development
+    keybinding: null
+
+high:
+  - name: file_tree
+    description: Interactive file browser in sidebar
+    status: planned
+    keybinding: null
+
+  - name: code_editor
+    description: Inline code editor with syntax highlighting
+    status: planned
+    keybinding: Ctrl+O
+
+  - name: command_palette
+    description: VS Code-style quick command access
+    status: planned
+    keybinding: Ctrl+Shift+P
+
+  - name: agent_streaming
+    description: Token-by-token response streaming
+    status: planned
+    keybinding: null
+
+  - name: conversation_export
+    description: Export conversations to markdown/JSON
+    status: planned
+    keybinding: Ctrl+E
+
+  - name: voice_input
+    description: Voice-to-text hands-free interaction
+    status: planned
+    keybinding: Ctrl+Space
+
+  - name: agent_personas
+    description: Switchable agent personalities (Senior Dev, Architect, etc)
+    status: planned
+    keybinding: null
+
+  - name: memory_system
+    description: Long-term memory across conversations via vector DB
+    status: planned
+    keybinding: null
+
+  - name: web_search_tool
+    description: Agent can search web for current information
+    status: planned
+    keybinding: null
+
+  - name: rag_codebase
+    description: RAG over entire codebase for context
+    status: planned
+    keybinding: null
+
+medium:
+  - name: multi_tab_conversations
+    description: Multiple conversation tabs like browser
+    status: in_development
+    keybinding: Ctrl+T
+
+  - name: code_execution
+    description: Execute Python/shell code in TUI
+    status: in_development
+    keybinding: null
+
+  - name: vim_mode
+    description: Vim keybindings for navigation
+    status: in_development
+    keybinding: ":set vim"
+
+  - name: git_integration
+    description: Git operations from within TUI
+    status: in_development
+    keybinding: Ctrl+G
+
+  - name: search_history
+    description: Full-text search across all conversations
+    status: in_development
+    keybinding: Ctrl+F
+
+  - name: template_system
+    description: Reusable prompt templates
+    status: planned
+    keybinding: null
+
+  - name: context_files
+    description: Attach files as context
+    status: planned
+    keybinding: null
+
+  - name: keyboard_shortcuts_help
+    description: Overlay showing all shortcuts
+    status: planned
+    keybinding: "?"
+
+  - name: multi_agent_collab
+    description: Multiple agents working together
+    status: planned
+    keybinding: null
+
+  - name: diff_viewer
+    description: Side-by-side code diff viewer
+    status: planned
+    keybinding: null
+
+  - name: screenshot_ocr
+    description: OCR from pasted screenshots
+    status: planned
+    keybinding: null
+
+  - name: task_orchestrator
+    description: AutoGPT-style autonomous execution
+    status: planned
+    keybinding: null
+
+  - name: documentation_generator
+    description: Auto-generate docs from codebase
+    status: planned
+    keybinding: null
+
+low:
+  - name: themes
+    description: Customizable color themes
+    status: planned
+    keybinding: null
+
+  - name: metrics_dashboard
+    description: Usage analytics and statistics
+    status: planned
+    keybinding: null
+
+autonomous_development:
+  dashboard: https://camel.autonomous.theater
+  guardian_daemon: active
+  current_success_rate: 84.0
+  features_attempted: 20
+  total_executions: 25

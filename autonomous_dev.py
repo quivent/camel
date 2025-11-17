@@ -16,8 +16,8 @@ from datetime import datetime, UTC
 from typing import List, Dict, Optional
 
 
-OLLAMA_ENDPOINT = "http://localhost:11434"
-MODEL = "gpt-oss:120b"
+OLLAMA_ENDPOINT = "http://192.222.57.162:11434"
+MODEL = "phi3.5:3.8b-mini-instruct-fp16"  # Lightweight, fast responses
 
 
 class DevelopmentAgent:
@@ -31,7 +31,7 @@ class DevelopmentAgent:
         self.start_time = None
         self.end_time = None
         self.outputs = []
-        self.client = httpx.AsyncClient(timeout=300.0)
+        self.client = httpx.AsyncClient(timeout=120.0)  # 2 minute timeout - FAST FAIL
 
     async def log(self, message: str):
         """Log agent activity - never crashes"""
@@ -49,11 +49,17 @@ class DevelopmentAgent:
             print(f"[{self.agent_id}] LOG ERROR: {e}", flush=True)
 
     async def read_file(self, filepath: str) -> str:
-        """Read file from project - never crashes"""
+        """Read file from project - MINIMAL CONTEXT, never crashes"""
         try:
             path = self.project_root / filepath
             if path.exists():
-                return path.read_text()
+                content = path.read_text()
+                lines = content.split('\n')
+
+                # CRITICAL: Only send first 50 lines to keep context small
+                if len(lines) > 50:
+                    return '\n'.join(lines[:50]) + f"\n\n... [TRUNCATED: {len(lines) - 50} more lines]"
+                return content
             return f"File not found: {filepath}"
         except Exception as e:
             return f"Error reading {filepath}: {e}"
@@ -71,24 +77,40 @@ class DevelopmentAgent:
             return False
 
     async def query_ollama(self, prompt: str, system_prompt: str) -> Optional[str]:
-        """Query Ollama with full context - never crashes"""
+        """Query Ollama with streaming for faster response - never crashes"""
         try:
-            response = await self.client.post(
+            # Use streaming to avoid timeout issues
+            async with self.client.stream(
+                "POST",
                 f"{OLLAMA_ENDPOINT}/api/generate",
                 json={
                     "model": MODEL,
                     "prompt": prompt,
                     "system": system_prompt,
-                    "stream": False
+                    "stream": True,
+                    "options": {
+                        "num_predict": 500,  # MAX 500 tokens - keep it fast
+                        "temperature": 0.7
+                    }
                 }
-            )
+            ) as response:
+                if response.status_code != 200:
+                    await self.log(f"Ollama returned status {response.status_code}")
+                    return None
 
-            if response.status_code == 200:
-                data = response.json()
-                return data.get("response", "")
+                full_response = ""
+                async for line in response.aiter_lines():
+                    if line.strip():
+                        try:
+                            data = json.loads(line)
+                            token = data.get("response", "")
+                            full_response += token
+                            if data.get("done", False):
+                                break
+                        except json.JSONDecodeError:
+                            pass
 
-            await self.log(f"Ollama returned status {response.status_code}")
-            return None
+                return full_response if full_response else None
 
         except Exception as e:
             await self.log(f"Ollama query failed: {e}")
@@ -101,27 +123,27 @@ class DevelopmentAgent:
             self.start_time = datetime.now(UTC).isoformat()
             await self.log(f"Starting task: {self.task['name']}")
 
-            # Build context by reading relevant files
+            # Build MINIMAL context - only first file, truncated
             file_context = ""
-            for filepath in self.task.get('files', []):
+            files_to_read = self.task.get('files', [])[:1]  # MAX 1 file
+            for filepath in files_to_read:
                 content = await self.read_file(filepath)
-                file_context += f"\n\n=== {filepath} ===\n{content}\n"
+                file_context += f"=== {filepath} (first 50 lines) ===\n{content}\n"
 
-            # Simpler prompt - don't demand JSON, just get implementation
-            system_prompt = f"""You are a Python developer implementing features for Camel TUI.
+            # ULTRA COMPACT prompt - minimal tokens
+            system_prompt = f"""Python dev. Camel TUI feature.
 
 TASK: {self.task['description']}
-PRIORITY: {self.task['priority']}
 
-CURRENT CODE:
+CODE CONTEXT:
 {file_context}
 
 REQUIREMENTS:
-{json.dumps(self.task.get('requirements', []), indent=2)}
+- {chr(10).join('- ' + r for r in self.task.get('requirements', [])[:3])}
 
-Provide a complete Python implementation. Be concise. Include all necessary code."""
+Give concise Python code only. No explanation."""
 
-            prompt = f"Implement: {self.task['name']}"
+            prompt = f"Implement {self.task['name']}. Code only."
 
             await self.log("Querying Ollama for implementation...")
             response = await self.query_ollama(prompt, system_prompt)
@@ -861,9 +883,9 @@ class AutonomousDevelopmentSystem:
                 print(f"⚠️  No tasks in {current_priority} tier, using critical", flush=True)
                 priority_tasks = [t for t in self.tasks if t['priority'] == 'critical']
 
-            # Spawn agents for each task (max 5 at a time for resource management)
+            # Spawn agents for each task (max 2 at a time to avoid overloading)
             active_agents = []
-            for task in priority_tasks[:5]:  # Limit to 5 concurrent agents
+            for task in priority_tasks[:2]:  # MAX 2 to keep Ollama responsive
                 agent = await self.spawn_agent(task)
                 if agent:
                     active_agents.append(agent)
@@ -944,8 +966,8 @@ class AutonomousDevelopmentSystem:
 
                 await self.run_development_cycle()
 
-                print("\n💤 Sleeping 300s before next cycle...", flush=True)
-                await asyncio.sleep(300)  # 5 minutes between cycles
+                print("\n💤 Sleeping 600s before next cycle...", flush=True)
+                await asyncio.sleep(600)  # 10 minutes between cycles - be gentle on Ollama
 
             except KeyboardInterrupt:
                 print("\n\n⏹️  Stopped by user", flush=True)

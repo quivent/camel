@@ -1,0 +1,13 @@
+servers:
+  - name: "Primary GPU (RTX 4090)"
+    endpoint: "http://192.222.57.162:11434"
+    default: true
+    priority: 1
+
+  - name: "Local Ollama"
+    endpoint: "http://localhost:11434"
+    priority: 2
+
+  - name: "Backup Server"
+    endpoint: "http://192.222.57.163:11434"
+    priority: 3
