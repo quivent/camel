@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "camel-tui"
+version = "0.1.0"
+description = "Advanced agentic TUI interface with 42 breakthrough features"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "ConsciousnessDebtor", email = "consciousness@debtor.ai"}
+]
+keywords = ["ai", "tui", "agent", "ollama", "llm", "terminal"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "textual>=0.47.0",
+    "httpx>=0.25.0",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "black>=23.0",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+camel = "camel.main:main"
+
+[project.urls]
+Homepage = "https://github.com/ConsciousnessDebtor/camel"
+Documentation = "https://camel.autonomous.theater"
+Repository = "https://github.com/ConsciousnessDebtor/camel"
+Issues = "https://github.com/ConsciousnessDebtor/camel/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["camel*"]
+exclude = ["tests*", "docs*"]
+
+[tool.setuptools.package-data]
+camel = ["config/*.yaml", "config/*.txt"]

@@ -1,0 +1,14 @@
+Welcome to Camel TUI - Enhanced AI Assistant Interface
+
+Connected to: gpt-oss:120b @ http://192.222.57.162:11434
+Available tools: Read, Write, Edit, Glob, Grep, Bash, Todo
+
+Quick commands:
+  Ctrl+M - Switch model
+  Ctrl+S - Switch server
+  Ctrl+/ - View tools reference
+  Ctrl+L - Clear conversation
+  Ctrl+T - Toggle terminal
+  Ctrl+C - Quit
+
+How can I assist you?
